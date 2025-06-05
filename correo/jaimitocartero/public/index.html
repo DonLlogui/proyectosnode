@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enviar Correo con Node.js</title>
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+  <h2>Formulario de Contacto</h2>
+  <form id="contactForm">
+    <label>Nombre:</label><br>
+    <input type="text" name="nombre" required><br><br>
+
+    <label>Email destino:</label><br>
+    <input type="email" name="email" required><br><br>
+
+    <label>Mensaje:</label><br>
+    <textarea name="mensaje" required></textarea><br><br>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <p id="responseMsg"></p>
+
+  <script>
+    const form = document.getElementById('contactForm');
+    const responseMsg = document.getElementById('responseMsg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      const res = await fetch('/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      responseMsg.textContent = result.message;
+    });
+  </script>
+</body>
+</html>
